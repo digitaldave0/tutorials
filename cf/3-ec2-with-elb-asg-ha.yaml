@@ -1,3 +1,4 @@
+---
 # ha_deployment_willreplace.template.yaml
 
 AWSTemplateFormatVersion: '2010-09-09'
@@ -143,13 +144,7 @@ Resources:
           yum install -y nginx
           service nginx start
           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WebServerGroup --region ${AWS::Region}
-       Tags: 
-        - 
-          Key: ServerName
-          Value: asg-instance
-          Key: Project
-          Value: Dev
-          
+
   WebElasticLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
