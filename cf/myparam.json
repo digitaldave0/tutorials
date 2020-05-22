@@ -1,0 +1,39 @@
+[
+    {
+      "ParameterKey": "KeyName",
+      "ParameterValue": "AmazonKey"
+    },
+    {
+        "ParameterKey": "InstanceProfile",
+        "ParameterValue": "my-role"
+      },  
+    {
+      "ParameterKey": "InstanceType",
+      "ParameterValue": "t2.micro"
+    },
+    {
+        "ParameterKey": "SecurityGroupDescription",
+        "ParameterValue": "my-test-asg-sg"
+    },
+    {
+        "ParameterKey": "PrivateSubnets",
+        "ParameterValue": "subnet-3b783152",
+        "ParameterValue": "subnet-f186138b"
+    },
+    {
+        "ParameterKey": "SubnetAvailabilityZone",
+        "ParameterValue": "eu-west-2a"
+    },
+    {
+        "ParameterKey": "SubnetIdPrivateEastC",
+        "ParameterValue": "subnet-f186138b"
+    },
+    {
+        "ParameterKey": "SubnetIdPrivateEastD",
+        "ParameterValue": "subnet-3b783152"
+    }, 
+    {
+        "ParameterKey": "VPCID",
+        "ParameterValue": "vpc-d25116ba"
+    }  
+  ]
