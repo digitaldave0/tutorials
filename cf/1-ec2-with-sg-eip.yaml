@@ -1,12 +1,12 @@
 ---
-Mappings:
-  RegionMap:
-    eu-west-1:
-    "32": "ami-00890f614e48ce866"
-    "64": "ami-06ce3edf0cff21f07"
-    eu-west-2:
-    "32": "ami-0596aab74a1ce3983"
-    "64": "ami-01a6e31ac994bbc09"
+# Mappings:
+#  RegionMap:
+#    eu-west-1:
+#    "32": "ami-00890f614e48ce866"
+#    "64": "ami-06ce3edf0cff21f07"
+#    eu-west-2:
+#    "32": "ami-0596aab74a1ce3983"
+#    "64": "ami-01a6e31ac994bbc09"
 
 Parameters:
   SecurityGroupDescription:
@@ -14,21 +14,57 @@ Parameters:
     Type: String
 
 Resources:
-  MyInstance:
+  MyInstance1:
     Type: AWS::EC2::Instance
     Properties:
       AvailabilityZone: eu-west-2a
-      #ImageId: ami-01a6e31ac994bbc09
-      ImageId !FindInMap [RegionMap, !Ref "AWS::Region","64"]
+      ImageId: ami-01a6e31ac994bbc09
+      #ImageId !FindInMap [RegionMap, !Ref "AWS::Region","64"]
       InstanceType: t2.micro
       SecurityGroups:
         - !Ref SSHSecurityGroup
         - !Ref ServerSecurityGroup
+      Tags: 
+        - 
+          Key: "Server Name"#
+          Value: !Ref MyInstance-1 I
+        
+  MyInstance2:
+      Type: AWS::EC2::Instance
+      Properties:
+        AvailabilityZone: eu-west-2a
+        ImageId: ami-0596aab74a1ce3983
+        #ImageId !FindInMap [RegionMap, !Ref "AWS::Region","64"]
+        InstanceType: t2.micro
+        SecurityGroups:
+          - !Ref SSHSecurityGroup
+          - !Ref ServerSecurityGroup
+        Tags: 
+        - 
+          Key: "Server Name"
+          Value: !Ref MyInstance-2
 
-  MyEIP:
-    Type: AWS::EC2::EIP
+  #MyEIP:
+  #  Type: AWS::EC2::EIP
+  #  Properties:
+  #    InstanceId: !Ref MyInstance
+
+  MyLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
-      InstanceId: !Ref MyInstance
+      Instances:
+      - !Ref MyInstance1
+      - !Ref MyInstance2
+      Listeners:
+      - LoadBalancerPort: '80'
+        InstancePort: '80'
+        Protocol: HTTP
+      HealthCheck:
+        Target: HTTP:80/
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
 
   SSHSecurityGroup:
     Type: AWS::EC2::SecurityGroup
