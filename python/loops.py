@@ -1,12 +1,9 @@
-import random
-import sys
-import os
 
 #loops
 
 #for loop starting at 0 - 9
 for x in range(0,10):
-    print (x, ' ')
+    print ("-""\n")
 
 #newline
 print('\n')
@@ -24,7 +21,38 @@ for x in [2,4,6,8,10]:
 #loops within loops
 num_list =[[1,2,3],[10,20,30],[100,200,300]]
 
-for x in range (0,3):
-    for y in range(0,3):
-        print(num_list[x][y])
+#loop through string 
 
+for x in "banana":
+  print(x)
+
+fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+  print(x)
+  if x == "banana":
+    break
+
+fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+  if x == "banana":
+    break
+  print(x)
+
+fruits = ["apple", "banana", "cherry"]
+for x in fruits:
+  if x == "banana":
+    continue
+  print(x)
+
+
+for x in range(6):
+  print(x)
+else:
+  print("Finally finished!")
+
+adj = ["red", "big", "tasty"]
+fruits = ["apple", "banana", "cherry"]
+
+for x in adj:
+  for y in fruits:
+    print(x, y)

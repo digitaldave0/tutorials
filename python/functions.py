@@ -15,3 +15,15 @@ print(addNumber(1,4))
 print ('What is Your Name?')
 name = sys.stdin.readline()
 print('Hello',name)
+
+def my_function():
+  print("Hello from a function")
+my_function()
+
+def my_function_food(food):
+  for x in food:
+    print(x)
+
+fruits = ["apple", "banana", "cherry"]
+
+my_function_food(fruits)
