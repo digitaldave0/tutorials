@@ -1,0 +1,23 @@
+FROM jenkins/jenkins:lts
+LABEL version="0.1"
+
+ADD ../../scripts/install_go.sh
+
+ENV HOME=/home /usr/bin/env \
+    URL='https://golang.org/dl/go1.15.5.linux-amd64.tar.gz' \
+    USERNAME=gouser \
+    FILE='go1.15.5.linux-amd64.tar.gz'
+
+
+RUN apt-get update && \
+    apt-get -y install \
+    apt-transport-https \
+    ca-certificates \
+    gnupg2 \
+    software-properties-common
+
+RUN useradd -U -u $USERNAME -G 0 -r -d /home/$USERNAME -s /sbin/nologin/ -c "Go User" $USERNAME \
+    && mkdir /home/$USERNAME \
+    && mkdir /home/$USERNAME/projects \
+    wget  $URL  -O /tmp/$FILE \
+    tar -xzvf /tmp/$FILE -C /usr/local 

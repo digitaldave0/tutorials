@@ -1,0 +1,1 @@
+docker run --init jenkins/inbound-agent -url http://192.168.5.116:8080 -secret @secret-file -workDir "~/dave/jenkins-slave"

@@ -1,0 +1,17 @@
+#docker build -t jenkins-maven .
+# sudo usermod -aG docker $USER
+# docker ps -q | xargs -r docker stop ; docker system prune -a
+#docker run -u 0 -p 8082:8080 -p 50002:50000 -v jenkins-maven:/var/jenkins_home jenkins-maven:latest
+#docker container exec -it festive_dijkstra  /bin/bash
+
+#docker run -d -p 8082:8080 -p 50002:50000 -v /var/runar/run/docker.sock -v /var/jenkins_home:/var/jenkins_home --name Jenkins_Docker gustavoapolinario/jenkins-docker
+
+
+
+FROM jenkins/jenkins:lts
+# if we want to install via apt
+USER root
+RUN apt-get update && apt-get install -y maven
+# drop back to the regular jenkins user - good practice
+USER jenkins
+

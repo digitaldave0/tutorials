@@ -1,0 +1,97 @@
+version: "3.8"
+
+#web
+services:
+  web:
+    container_name: web
+    image: nginx:latest
+    restart: always
+    depends_on: 
+      - database
+      - phpmyadmin
+
+    ports:
+      - "${MY_PORT}:80"
+    
+    volumes:
+      - mydata:/data  
+
+    networks:
+      - mynet
+    
+    #env_file: 
+    # - .env.txt
+
+
+  #database
+  database:
+    container_name: cars
+    image: mysql:latest
+    ports:
+      - "${DB_PORT}:3306"
+    
+    volumes:
+      - mydata:/data
+    
+    networks: 
+      - mynet
+    
+    environment: 
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: cars
+      MYSQL_USER: dave
+      MYSQL_PASSWORD: secret
+
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    environment:
+     - PMA_ARBITRARY=1
+    restart: always
+    ports:
+     - 9092:80
+    volumes:
+     - mydata:/sessions
+
+
+#define networks 
+
+networks:
+  mynet:
+
+#define volumes
+
+volumes:
+  mydata:
+
+
+
+# purge everything
+# docker ps -q | xargs -r docker stop ; docker system prune -a
+
+
+#interact
+# docker run -it ubuntu bash
+
+
+#disks
+# docker volume ls
+# docker volume create hello
+# docker volume prune
+
+
+#other
+# docker-compose run web env
+# docker-compose stop
+# docker-compose down --volumes
+# docker-compose ps
+# docker-compose up -d
+
+
+#networking notes
+# docker network create mynet
+# docker network ls
+
+#info 
+#docker inspect --format='{{.Config.Image}}' e60fc059cc95
