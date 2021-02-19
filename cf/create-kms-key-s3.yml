@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Create a KMS Key and use it to secure s3 bucket"
+
+Resources:
+  
+#Create KMS Key
+  daveskmskey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description:  "KMS Key"
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: "2012-10-17"
+        Id: "key-default-1"
+        Statement:
+        - Sid: Enable IAM User Permissions
+          Effect: Allow
+          Principal:
+            AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+          Action: kms:*
+          Resource: '*'
+        - Sid: Allow administration of the key
+          Effect: Allow
+          Principal:
+            AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+          Action:
+            - kms:Create*
+            - kms:Describe*
+            - kms:Enable*
+            - kms:List*
+            - kms:Put*
+            - kms:Update*
+            - kms:Revoke*
+            - kms:Disable*
+            - kms:Get*
+            - kms:Delete*
+            - kms:ScheduleKeyDeletion
+            - kms:CancelKeyDeletion
+          Resource: '*'
+        - Sid: "Allow use of the key"
+          Effect: Allow
+          Principal:
+            AWS: arn:aws:iam::734395762262:user/daveh
+          Action:
+            - kms:DescribeKey
+            - kms:Encrypt
+            - kms:Decrypt
+            - kms:ReEncrypt*
+            - kms:GenerateDataKey
+            - kms:GenerateDataKeyWithoutPlaintext
+          Resource: '*'
+  dahs3Alias:
+     Type: AWS::KMS::Alias
+     Properties:
+       AliasName: alias/dahs3key
+       TargetKeyId:
+         Ref: daveskmskey      
+
+#Create S3 Bucket
+  daves3bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: 'dahtestbucket99'
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              KMSMasterKeyID: !Ref daveskmskey
+              SSEAlgorithm: aws:kms
+
+#Create Bucket Policy for Bucket above.
+  createbucketpolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+       PolicyDocument:
+         Id: MyPolicy
+         Version: "2012-10-17"
+         Statement:
+           - Sid: AddCannedAcl
+             Effect: Allow
+             Principal: arn:aws:iam::734395762262:user/daveh
+             Action: 's3:GetObject'
+             Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref daves3bucket
+                - /*
+       Bucket: !Ref daves3bucket
+
+Outputs:
+  S3Bucket:
+    Description: Bucket Created using this template.
+    Value: !Ref daves3bucket
