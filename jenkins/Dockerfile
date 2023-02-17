@@ -22,6 +22,3 @@ RUN usermod -a -G docker jenkins
 
 
 USER jenkins
-
-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
-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
