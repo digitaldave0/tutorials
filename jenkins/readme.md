@@ -1,5 +1,6 @@
 # build docker jenkins image
-'''bash
+
+```
 echo -e "FROM jenkins/jenkins:lts
 
 USER root
@@ -30,4 +31,24 @@ docker images
 docker tag ac543a9fa523 <docker_login_name>/my_jenkins_build:1.0
 docker push <docker_login_name>/my_jenkins_build
 docker run --name jenkins-docker -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock <docker_login_name>/my_jenkins_build
-'''
+```
+
+# running docker 
+
+```
+# Remove All old images
+
+docker rmi $(docker images -a -q) -f 
+docker rm $(docker ps -aq)
+docker images
+docker ps
+
+# Build Tag Image in this case Jenkins
+cd jenkins
+docker build -t myjenkins:1 .
+# Run Image
+docker run -d --name jenkins-docker -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock myjenkins:1
+
+# Get Jenkins key
+docker exec -it 59c080a8df24 cat /var/jenkins_home/secrets/initialAdminPassword
+```

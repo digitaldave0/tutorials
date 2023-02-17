@@ -1,6 +1,4 @@
-# build docker jenkins image
-'''bash
-echo -e "FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:lts
 
 USER root
 
@@ -22,28 +20,8 @@ RUN apt-get install -y docker-ce
 
 RUN usermod -a -G docker jenkins
 
-USER jenkins" > Dockerfile
 
-docker build .
-docker login --username <docker_logon_name>
-docker images
-docker tag ac543a9fa523 <docker_login_name>/my_jenkins_build:1.0
-docker push <docker_login_name>/my_jenkins_build
-docker run --name jenkins-docker -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock <docker_login_name>/my_jenkins_build
-'''
+USER jenkins
 
-# running docker 
-'''
-# Remove All old images
-docker rmi $(docker images -a -q) -f 
-docker rm $(docker ps -aq)
-docker images
-docker ps
-# Build Tag Image in this case Jenkins
-cd jenkins
-docker build -t myjenkins:1 .
-# Run Image
-docker run -d --name jenkins-docker -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock myjenkins:1
-# Get Jenkins key
-docker exec -it 59c080a8df24 cat /var/jenkins_home/secrets/initialAdminPassword
-'''
+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
+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
