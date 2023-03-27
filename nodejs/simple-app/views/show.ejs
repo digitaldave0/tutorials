@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Node.js Web App</title>
+  </head>
+  <body>
+    <h1>Entries</h1>
+    <% if (entries.length > 0) { %>
+      <ul>
+        <% entries.forEach(function(entry, index) { %>
+          <li><%= index + 1 %>. <%= entry.name %> - <%= entry.phone %></li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <p>No entries yet.</p>
+    <% } %>
+
+
+<a href="/index"><button>Back to Index</button></a>
+  </body>
+</html>

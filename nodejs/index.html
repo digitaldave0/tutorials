@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+ <meta charset="UTF-8">
+  <title>Add User</title>
+</head>
+<body>
+  <h1>Add User</h1>
+  <form method="POST" action="/add-user">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name">
+
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob" name="dob">
+
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location">
+
+    <input type="submit" value="Add User">
+  </form>
+</body>
+</html>
+<script>
+  $(document).ready(function() {
+    $('form').submit(function(event) {
+      event.preventDefault();
+
+      const name = $('#name').val();
+      const dob = $('#dob').val();
+      const location = $('#location').val();
+
+      const user = {name, dob, location};
+
+      // Code to send user data to server
+    });
+  });
+</script>
