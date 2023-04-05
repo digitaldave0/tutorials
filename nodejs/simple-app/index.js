@@ -1,8 +1,13 @@
-const express = require('express')
+//const express = require('express')
+const exphbs = require('express-handlebars');
 const app = express()
 const port = 3000
 
-app.set('view engine', 'ejs');
+// app.set('view engine', 'ejs');
+app.engine('handlebars', exphbs());
+// Set up Handlebars as the view engine
+app.set('view engine', 'handlebars');
+
 // Set up body parsing middleware
 app.use(express.urlencoded({ extended: true }))
 
@@ -46,6 +51,7 @@ app.post('/', (req, res) => {
 app.get('/index', (req, res) => {
     res.render('index', { entries: entries });
   });
+  
 
 // Start the server
 app.listen(port, () => {

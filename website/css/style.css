@@ -1,0 +1,46 @@
+/* Navigation menu */
+#nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #333;
+  height: 100%;
+  width: 0;
+  transition: width 0.3s ease-out;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+}
+
+/* Open class for the navigation menu */
+#nav.open {
+  width: 250px;
+}
+
+/* Navigation menu items */
+#nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 20px;
+  margin: 20px 0;
+  transition: color 0.2s ease-out;
+}
+
+#nav a:hover {
+  color: blue;
+}
+
+/* Menu button */
+#menu-button {
+  position: fixed;
+  z-index: 2;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}

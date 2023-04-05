@@ -1,0 +1,18 @@
+# Node.js
+node_modules
+
+# Logs
+logs
+*.log
+
+# Build
+build
+dist
+
+# Dependency directories
+jspm_packages/
+bower_components/
+
+# OS generated files
+.DS_Store
+Thumbs.db
