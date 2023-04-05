@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  AmiId:
+    Description: Please enter latest Ubuntu ImageiD
+    Default: ami-0c94855ba95c71c99
+    Type: String
+  MyIp:
+     Description: Enter IP Address for SSH Connection
+     Type: String
+Resources:
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "jenkins-master-sg"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref MyIP
+  JenkinsInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !Ref AmiId
+      InstanceType: t2.micro
+      KeyName: jenkins-master-key
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+          yum install -y java-1.8.0-openjdk-devel git
+          curl --silent --location https://rpm.nodesource.com/setup_12.x | bash -
+          yum install -y nodejs
+          wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war -O /opt/jenkins.war
+          java -jar /opt/jenkins.war --httpPort=8080 --prefix=/jenkins
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: '20'
+            VolumeType: gp2
+Outputs:
+  InstanceId:
+    Value: !Ref JenkinsInstance
+    Value: !Ref MyIP
