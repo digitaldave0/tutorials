@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+    parameters {
+      string(name: 'NAME',
+        defaultValue: 'Dave',
+        description: 'Enter your name')
+      choice(name: 'AWS_REGION',
+        choices: ['us-east-1','eu-west-1','eu-west-2'],
+        description: 'Select the AWS region for deployment')
+    }
+    environment {
+      MAX_SIZE = 10
+      MIN_SIZE = 1
+    }
+    stages {
+        stage ('requirements') {
+            steps {
+            echo "Getting Requirements..... ${params.NAME}"
+          }
+        } 
+        stage ('Build') {
+            steps {
+            echo "Building..... for ${params.AWS_REGION}"
+          }
+        }
+        stage ('Default Scale'){
+          steps{
+            echo "MAX_SIZE = ${env.MAX_SIZE}"
+            echo "MIN_SIZE = ${env.MIN_SIZE}"   
+          }
+        }
+
+        stage ('Test') {
+            environment {
+              MAX_SIZE = 100
+              MIN_SIZE = 10
+            }
+            steps { 
+            echo 'Testing..1'
+            echo 'Testing..2'
+            echo 'Testing..3'
+            echo 'Testing..4'
+            echo "MAX_SIZE = ${env.MAX_SIZE}"
+            echo "MIN_SIZE = ${env.MIN_SIZE}"
+          }
+       }  
+        stage ('Report') {
+            steps { 
+            echo 'Reporting...'
+            sh 'echo "this is a report " > report.txt'
+            archiveArtifacts allowEmptyArchive: true, artifacts: '*.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+          }
+      }
+    }
+}

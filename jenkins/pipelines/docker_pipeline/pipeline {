@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    parameters {
+      choice(name: 'ENVIRONMENT',
+        choices: ['DEVELOPMENT','STAGING','PRODUCTION'],
+        description: 'Choose the enviornment fo this deployment')
+    }
+    stages {
+        stage ('Build') {
+            steps {
+                echo "Building..."
+            }
+        }
+        stage ('Deploying to non-prod enviroments') {
+            when {
+                expression { params.ENVIRONMENT != 'PRODUCTION'}
+            }
+            steps {
+                echo "Deploying to ${params.ENVIRONMENT}"
+            }
+        }
+        stage ('Deploying to production') {
+            when {
+                expression { params.ENVIRONMENT == 'PRODUCTION'}
+            }
+            steps {
+                input message: 'Confirm deployment to production', ok: 'Deploy'
+                echo "Deploying to ${params.ENVIRONMENT}"
+
+    }
+}

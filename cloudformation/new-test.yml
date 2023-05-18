@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creating s3 bucket
+
+#Create S3 Bucket
+
+Resources:
+  daves3bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: 'dahtestbucket99'
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              KMSMasterKeyID: arn:aws:kms:eu-west-1:734395762262:key/df661d66-65d6-4b09-812f-39aa27059e35
+              SSEAlgorithm: aws:kms
+
+#Create Bucket Policy for Bucket above.
+  createbucketpolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+       PolicyDocument:
+         Id: MyPolicy
+         Version: "2012-10-17"
+         Statement:
+           - Sid: AddCannedAcl
+             Effect: Allow
+             Principal: arn:aws:iam::734395762262:user/daveh
+             Action: 's3:GetObject'
+             Resource: !Join 
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref daves3bucket
+                - /*
+       Bucket: !Ref daves3bucket
+
+Outputs:
+  S3Bucket:
+    Description: Bucket Created using this template.
+    Value: !Ref daves3bucket
