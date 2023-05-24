@@ -1,0 +1,103 @@
+pipeline {
+  agent any
+  
+  stages {
+    stage('Generate Report') {
+      steps {
+        script {
+          def label = "red"
+          def tableColor = getTableColor(label)
+          
+          def tableHtml = generateTableHtmlWithColor(label, tableColor)
+          def awsDummyData = generateAwsDummyData(5) // Generate 5 random AWS dummy data objects
+          def reportHtml = generateReportHtml(tableHtml, awsDummyData, tableColor)
+          
+          println "HTML content: $reportHtml"
+        }
+      }
+    }
+  }
+  
+  post {
+    always {
+      script {
+        def artifactName
+        
+        environment {
+          CURRENT_DATE = sh(script: "date '+%Y%m%d'", returnStdout: true).trim()
+          artifactName = "report-${CURRENT_DATE}.html"
+        }
+        
+        // Write the report to a file or send it via email, etc.
+        writeFile file: artifactName, text: reportHtml
+        
+        // Archive the report.html file as an artifact
+        archiveArtifacts artifactName
+      }
+    }
+  }
+}
+
+def generateTableHtmlWithColor(label, tableColor) {
+  def html = """
+    <table style="background-color: ${tableColor};">
+      <tr>
+        <th>Header 1</th>
+        <th>Header 2</th>
+        <!-- Add more table headers as needed -->
+      </tr>
+      %TABLE_ROWS%
+    </table>
+  """
+  return html.replace('%TABLE_ROWS%', '')
+}
+
+def getTableColor(label) {
+  // Define your color logic based on the label
+  // ...
+}
+
+def generateAwsDummyData(count) {
+  def awsDummyData = []
+  
+  for (int i = 1; i <= count; i++) {
+    def data = [
+      // Generate your dummy data here
+      // ...
+    ]
+    awsDummyData.add(data)
+  }
+  
+  return awsDummyData
+}
+
+def generateReportHtml(tableHtml, awsDummyData, tableColor) {
+  def tableHtmlRows = ""
+  
+  awsDummyData.each { data ->
+    def row = """
+      <tr>
+        <td>${data.property1}</td>
+        <td>${data.property2}</td>
+        <!-- Add more table data rows as needed -->
+      </tr>
+    """
+    
+    tableHtmlRows += row
+  }
+  
+  def reportHtml = """
+    <html>
+      <head>
+        <title>My Report</title>
+        <!-- Add your custom styles here -->
+      </head>
+      <body>
+        <h1>Report</h1>
+        ${tableHtml.replace('%TABLE_ROWS%', tableHtmlRows)} <!-- Insert the generated tableHtml -->
+      </body>
+    </html>
+  """
+  
+  return reportHtml
+}
