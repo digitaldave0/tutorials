@@ -1,16 +1,20 @@
 version: '3'
+
 services:
-  jenkins:
-    build: .  
-    #image: digital38/myjenkins:latest
-    container_name: jenkins
-    user: jenkins
-    volumes:
-      - /data/jenkins:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      JENKINS_HOST_HOME: "/data/jenkins"
+  jenkins-one:
+    image: jenkins/jenkins
+    container_name: jenkins-one
     ports:
-      - "8080:8080"
-      - "5000:5000"
-      - "50000:50000"
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  jenkins-exec:
+    image: jenkins/jenkins
+    container_name: jenkins-exec
+    volumes:
+      - jenkins-data:/var/jenkins_home
+
+volumes:
+  jenkins-data:
+
