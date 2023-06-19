@@ -1,0 +1,13 @@
+# Ignore temporary files
+*.tmp
+*~
+
+# Ignore Ansible playbooks
+*.yml
+*.yaml
+
+# Ignore Ansible inventory files
+hosts
+
+# Ignore Vagrant files
+Vagrantfile
