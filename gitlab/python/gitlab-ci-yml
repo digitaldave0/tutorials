@@ -1,0 +1,51 @@
+image: python:3.9  # Use an appropriate Python version
+
+stages:
+  - dev
+  - package
+  - staging
+  - production
+
+variables:
+  PYTHONUNBUFFERED: "1"  # Ensures Python output is not buffered
+
+before_script:
+  - pip install -r requirements.txt  # Install project dependencies
+  - echo $APP_VERSION > build/version.txt  # Create a version file
+
+dev:
+  stage: dev
+  script:
+    - echo "Building and deploying to Dev environment..."
+    - python manage.py migrate
+    - python manage.py runserver
+  only:
+    - develop  # Replace with your development branch name
+
+.build docker image:
+  stage: package
+  image: docker:20.10.12
+  services:
+    - docker:20.10.12-dind
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$APP_VERSION . 
+    - docker image ls
+
+staging:
+  stage: staging
+  script:
+    - echo "Building and deploying to Staging environment..."
+    - python manage.py migrate
+    - python manage.py runserver
+  only:
+    - /^release-.*$/  # Adjust the pattern to match your staging branch naming convention
+
+production:
+  stage: production
+  script:
+    - echo "Building and deploying to Production environment..."
+    - python manage.py migrate
+    - python manage.py runserver
+  only:
+    - master  # Production deployments are triggered from the master branch
+  when: manual  # Manual step for production deployments
