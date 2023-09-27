@@ -1,0 +1,15 @@
+pytube
+beautifulsoup4
+googletrans
+gTTS
+gTTS-token
+pip
+pipwin
+playsound
+PyAudio
+pylint
+pyobjc
+pyttsx3
+setuptools
+SpeechRecognition
+Translator
